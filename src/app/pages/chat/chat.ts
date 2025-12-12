@@ -44,74 +44,67 @@ sendMessage(): void {
   this.messages.update(m => [...m, { from: 'user', text: msg }]);
   this.userMessage.set('');
 
-  fetch(
-    'https://arm2030.app.n8n.cloud/webhook/b6821fa0-1c60-4f5b-bdb5-d567f2414010/chat',
-    {
+  fetch('https://arm2030.app.n8n.cloud/webhook/b6821fa0-1c60-4f5b-bdb5-d567f2414010/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      sessionId: this.sessionId,
+      chatInput: msg
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+
+  console.log('RAW RESPONSE:', data);
+
+  let output: any;
+
+  // ✅ FIX: handle stringified JSON from n8n
+  if (typeof data?.output === 'string') {
+    output = JSON.parse(data.output);
+  } else {
+    output = data?.output ?? data;
+  }
+
+  console.log('PARSED OUTPUT:', output);
+
+  // ===== INTENT =====
+  if (output.type === 'intent') {
+    fetch('https://arm2030.app.n8n.cloud/webhook/absher-request-processor', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         sessionId: this.sessionId,
-        chatInput: msg
+        intent: output.intent,
+        details: output.data
       })
-    }
-  )
-  .then(res => res.json())
-  .then(data => {
-
-    // ✅ يدعم كل أشكال الرد
-    const output = data?.output ?? data;
-
-    console.log('FULL RESPONSE:', output);
-
-    // ===== INTENT =====
-    if (output?.type === 'intent') {
-      fetch(
-        'https://arm2030.app.n8n.cloud/webhook/absher-request-processor',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sessionId: this.sessionId,
-            intent: output.intent,
-            details: output.data
-          })
-        }
-      )
-      .then(res => res.json())
-      .then(result => {
-        this.messages.update(m => [
-          ...m,
-          {
-            from: 'bot',
-            text: result?.reply ?? this.i18n.t('fallback')
-          }
-        ]);
-      });
-
-      return;
-    }
-
-    // ===== CHAT =====
-    if (output?.reply) {
+    })
+    .then(res => res.json())
+    .then(result => {
       this.messages.update(m => [
         ...m,
-        { from: 'bot', text: output.reply }
+        { from: 'bot', text: result?.reply ?? this.i18n.t('fallback') }
       ]);
-    } else {
-      this.messages.update(m => [
-        ...m,
-        { from: 'bot', text: this.i18n.t('fallback') }
-      ]);
-    }
-  })
+    });
+    return;
+  }
+
+  // ===== CHAT =====
+  this.messages.update(m => [
+    ...m,
+    { from: 'bot', text: output.reply ?? this.i18n.t('fallback') }
+  ]);
+})
+
   .catch(err => {
-    console.error(err);
+    console.error('FETCH ERROR:', err);
     this.messages.update(m => [
       ...m,
       { from: 'bot', text: this.i18n.t('fallback') }
     ]);
   });
 }
+
 
   goToDashboard(): void {
     this.router.navigate(['/dashboard']);
