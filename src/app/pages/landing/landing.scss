@@ -1,0 +1,55 @@
+.landing-container {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.logo {
+  width: 130px;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 30px 0;
+}
+
+.feature {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  font-size: 30px;
+}
+
+.start-btn {
+  background: #0a8a45;
+  color: #fff;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+footer {
+  margin-top: 30px;
+  color: #999;
+}

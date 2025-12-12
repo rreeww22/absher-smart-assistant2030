@@ -1,0 +1,63 @@
+<div class="dashboard">
+
+  <!-- Language Switcher -->
+  <!-- Language Switcher -->
+   <!-- ===== LANGUAGE SWITCHER ===== -->
+  <div class="lang-switcher">
+    <button
+      (click)="switchLang('ar')"
+      [class.active]="i18n.currentLang() === 'ar'">
+      عربي
+    </button>
+
+    <button
+      (click)="switchLang('en')"
+      [class.active]="i18n.currentLang() === 'en'">
+      English
+    </button>
+
+    <span class="coming-soon">Urdu • Tagalog (Soon)</span>
+  </div>
+
+  <div class="welcome-box">
+    <h2>{{ i18n.t('welcome', { name: 'ريما' }) }}</h2>
+    <p>{{ i18n.t('assistant_happy') }}</p>
+  </div>
+
+  <h3 class="section-title">{{ i18n.t('quick_services') }}</h3>
+
+  <div class="quick-services">
+
+    <div class="service-card" routerLink="/chat">
+      <span>💬</span>
+      <h4>{{ i18n.t('smart_chat') }}</h4>
+    </div>
+
+    <div class="service-card"routerLink="/info">
+      <span>📄</span>
+      <h4>{{ i18n.t('create_request') }}</h4>
+    </div>
+
+    <div class="service-card">
+      <span>📊</span>
+      <h4>{{ i18n.t('request_status') }}</h4>
+    </div>
+
+    <div class="service-card">
+      <span>📅</span>
+      <h4>{{ i18n.t('book_appointment') }}</h4>
+    </div>
+
+  </div>
+
+  <h3 class="section-title">{{ i18n.t('suggestions') }}</h3>
+
+  <div class="suggestion">
+    {{ i18n.t('suggestion1') }}
+  </div>
+
+  <div class="suggestion">
+    {{ i18n.t('suggestion2') }}
+  </div>
+
+</div>

@@ -1,0 +1,55 @@
+<div
+  class="chat-wrapper"
+  [attr.dir]="i18n.currentLang() === 'ar' ? 'rtl' : 'ltr'">
+
+  <!-- ===== BACK BUTTON ===== -->
+  <button
+    class="back-btn"
+    (click)="goToDashboard()"
+    [attr.aria-label]="i18n.t('back')">
+    ← {{ i18n.t('back') }}
+  </button>
+
+  <!-- ===== HEADER ===== -->
+  <div class="chat-header">
+    <img src="assets/Absher.png" class="chat-logo" alt="Absher" />
+    <h2>{{ i18n.t('assistant_title') }}</h2>
+  </div>
+
+  <!-- ===== MESSAGES AREA ===== -->
+  <div class="messages" #scrollContainer>
+
+    <div
+      class="msg"
+      *ngFor="let m of messages()"
+      [class.user]="m.from === 'user'"
+      [class.bot]="m.from === 'bot'">
+
+      <div class="bubble">
+        {{ m.text }}
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ===== INPUT AREA ===== -->
+  <div class="input-area">
+
+    <input
+      [ngModel]="userMessage()"
+      (ngModelChange)="userMessage.set($event)"
+      [placeholder]="i18n.t('type_message')"
+      (keyup.enter)="sendMessage()"
+    />
+
+    <button
+      class="send-btn"
+      (click)="sendMessage()"
+      [attr.aria-label]="i18n.t('send')">
+      ➤
+    </button>
+
+  </div>
+
+</div>

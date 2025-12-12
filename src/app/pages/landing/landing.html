@@ -1,0 +1,66 @@
+<div
+  class="landing-container"
+  [attr.dir]="i18n.currentLang() === 'ar' ? 'rtl' : 'ltr'">
+
+  <!-- ===== LANGUAGE SWITCHER ===== -->
+  <div class="lang-switcher">
+    <button
+      (click)="switchLang('ar')"
+      [class.active]="i18n.currentLang() === 'ar'">
+      عربي
+    </button>
+
+    <button
+      (click)="switchLang('en')"
+      [class.active]="i18n.currentLang() === 'en'">
+      English
+    </button>
+
+    <span class="coming-soon">Urdu • Tagalog (Soon)</span>
+  </div>
+
+  <!-- ===== LOGO ===== -->
+  <div class="logo-box">
+    <img src="assets/Absher.png" class="logo" />
+  </div>
+
+  <h1 class="title">{{ i18n.t('assistant_title') }}</h1>
+  <p class="subtitle">{{ i18n.t('assistant_subtitle') }}</p>
+
+  <div class="features">
+
+    <div class="feature">
+      <div class="icon">🔍</div>
+      <div class="text">
+        <h3>{{ i18n.t('feature_1_title') }}</h3>
+        <p>{{ i18n.t('feature_1_desc') }}</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="icon">⚡</div>
+      <div class="text">
+        <h3>{{ i18n.t('feature_2_title') }}</h3>
+        <p>{{ i18n.t('feature_2_desc') }}</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="icon">🤖</div>
+      <div class="text">
+        <h3>{{ i18n.t('feature_3_title') }}</h3>
+        <p>{{ i18n.t('feature_3_desc') }}</p>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="start-btn" routerLink="/dashboard">
+    {{ i18n.t('start_now') }} →
+  </button>
+
+  <footer>
+    {{ i18n.t('footer') }}
+  </footer>
+
+</div>

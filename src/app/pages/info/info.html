@@ -1,0 +1,58 @@
+<div class="info-page" [attr.dir]="i18n.currentLang() === 'ar' ? 'rtl' : 'ltr'">
+    <!-- ===== BACK BUTTON ===== -->
+    <button class="back-btn" (click)="goToDashboard()" [attr.aria-label]="i18n.t('back')">
+        ← {{ i18n.t('back') }}
+    </button>
+    <!-- ===== HEADER ===== -->
+    <div class="info-header">
+        <h2>{{ i18n.t('info_title') }}</h2>
+        <p>{{ i18n.t('info_subtitle') }}</p>
+    </div>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <div class="info-section">
+        <h3>{{ i18n.t('how_it_works') }}</h3>
+
+        <div class="cards">
+            <div class="card">
+                <span>🧠</span>
+                <h4>{{ i18n.t('info_card_1_title') }}</h4>
+                <p>{{ i18n.t('info_card_1_desc') }}</p>
+            </div>
+
+            <div class="card">
+                <span>⚡</span>
+                <h4>{{ i18n.t('info_card_2_title') }}</h4>
+                <p>{{ i18n.t('info_card_2_desc') }}</p>
+            </div>
+
+            <div class="card">
+                <span>🔗</span>
+                <h4>{{ i18n.t('info_card_3_title') }}</h4>
+                <p>{{ i18n.t('info_card_3_desc') }}</p>
+            </div>
+
+            <div class="card">
+                <span>🛡️</span>
+                <h4>{{ i18n.t('info_card_4_title') }}</h4>
+                <p>{{ i18n.t('info_card_4_desc') }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== LEARNING SECTION ===== -->
+    <div class="info-section highlight">
+        <h3>{{ i18n.t('learning_title') }}</h3>
+        <ul>
+            <li>🎯 {{ i18n.t('learning_1') }}</li>
+            <li>💬 {{ i18n.t('learning_2') }}</li>
+            <li>📈 {{ i18n.t('learning_3') }}</li>
+        </ul>
+    </div>
+
+    <!-- ===== FOOTER NOTE ===== -->
+    <div class="info-footer">
+        <p>Vision 2030 • AI-Powered Government Services</p>
+    </div>
+
+</div>
