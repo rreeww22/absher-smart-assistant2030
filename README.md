@@ -1,59 +1,201 @@
-# AbsherSmartAssistant
+🇸🇦 Absher Smart Assistant
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.2.
+AI-Powered Government Services Assistant
 
-## Development server
+🧠 Overview
 
-To start a local development server, run:
+Absher Smart Assistant is an AI-powered multilingual assistant designed to help users interact with Saudi government services through a natural chat interface.
+It understands user requests, provides guidance, and can automatically prepare and submit service requests.
 
-```bash
-ng serve
-```
+Built for Vision 2030 digital transformation goals.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+✨ Key Features
+🤖 Smart Chat Assistant
 
-## Code scaffolding
+Natural conversation with users
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Understands service-related requests
 
-```bash
-ng generate component component-name
-```
+Distinguishes between:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Normal chat
 
-```bash
-ng generate --help
-```
+Government service requests (intents)
 
-## Building
+Unclear messages (fallback)
 
-To build the project run:
+🧩 Intelligent Intent Detection
 
-```bash
-ng build
-```
+The assistant automatically detects when the user wants to:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Create a request
 
-## Running unit tests
+Update a request
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Check request status
 
-```bash
-ng test
-```
+Cancel a request
 
-## Running end-to-end tests
+Book an appointment
 
-For end-to-end (e2e) testing, run:
+Report a lost ID
 
-```bash
-ng e2e
-```
+Request a general service
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+When an intent is detected, it is routed to a Request Processing workflow.
 
-## Additional Resources
+⚙️ Automated Request Processing
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Generates a unique ticket ID (e.g. TCK-2025-12345)
+
+Infers service name
+
+Assigns processing status
+
+Estimates processing time
+
+Returns a structured JSON response
+
+🌍 Multilingual Support
+
+Currently supported:
+
+Arabic (default)
+
+English
+
+Planned (Coming Soon):
+
+Urdu
+
+Tagalog
+
+Language features:
+
+Auto-detect language
+
+Reply in the same language
+
+Full RTL / LTR support
+
+Language switcher in UI
+
+🔁 Fallback Handling
+
+If the assistant cannot understand the request, it safely responds with:
+
+Arabic:
+"سيتم التواصل معك مستقبلاً من قبل موظف."
+
+English:
+"A staff member will contact you soon."
+
+This ensures no broken or awkward responses.
+
+🏗️ Architecture
+Frontend (Angular)
+
+Standalone Components
+
+Signal-based state management
+
+Clean Chat UI
+
+RTL / LTR auto-switching
+
+Translation using JSON files
+
+Dashboard, Chat, Info & Landing pages
+
+Backend (n8n + AI)
+
+Chat Workflow
+
+Detects intent or chat
+
+Returns structured JSON only
+
+Request Processor Workflow
+
+Generates tickets
+
+Prepares request data
+
+Returns final response
+
+AI Model
+
+Groq LLaMA-3
+
+Strict JSON output enforcement
+
+No hallucinated text outside JSON
+
+🔀 Application Flow
+
+User sends a message
+
+AI Agent analyzes the message
+
+Response type:
+
+chat → reply directly
+
+intent → forward to request processor
+
+Request processor returns final response
+
+UI displays the result
+
+📁 Project Structure
+src/
+│
+├── app/
+│   ├── pages/
+│   │   ├── landing/
+│   │   ├── dashboard/
+│   │   ├── chat/
+│   │   └── info/
+│   │
+│   ├── services/
+│   │   └── translation.service.ts
+│   │
+│   ├── app.routes.ts
+│   └── app.ts
+│
+├── assets/
+│   └── i18n/
+│       ├── ar.json
+│       └── en.json
+│
+└── styles.scss
+
+🌐 Internationalization (i18n)
+
+JSON-based translations
+
+Dynamic language switching
+
+Automatic dir="rtl" or dir="ltr"
+
+Default language: Arabic
+
+🧪 Error Handling
+
+Network errors handled gracefully
+
+AI fallback responses enforced
+
+No empty or broken UI states
+
+🎯 Why This Solution?
+
+Fast and intuitive for users
+
+Scalable for future services
+
+Multilingual by design
+
+Safe fallback behavior
+
+Suitable for real government platforms
