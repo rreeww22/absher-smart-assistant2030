@@ -1,0 +1,158 @@
+{
+  "name": "Absher Smart Assistant for Government Services",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "absher-request-processor",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "d2a8f035-9eb1-4340-9349-ec21995bd200",
+      "name": "Request Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "c7239252-3808-4ca1-ba0f-d04fea80a5f2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "statusOptions",
+              "value": "[\"processing\", \"completed\", \"received\"]",
+              "type": "array"
+            },
+            {
+              "id": "id-2",
+              "name": "ticketPrefix",
+              "value": "REQ-",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "0f68c1bb-3a31-4508-ad39-797e1d101a17",
+      "name": "Workflow Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate incoming JSON has required fields\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const data = item.json;\n  \n  // Check if required fields exist\n  if (!data.intent || !data.details) {\n    results.push({\n      json: {\n        success: false,\n        error: \"Missing required fields: 'intent' and 'details' are required\",\n        received: data,\n        timestamp: new Date().toISOString()\n      }\n    });\n  } else {\n    // Pass through the data if validation succeeds\n    results.push({\n      json: {\n        ...data,\n        validated: true\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "id": "a964ac6e-71c1-4bc9-aea1-556014a8b3cb",
+      "name": "Validate Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ------------------------------\n// Generate ticket ID\n// ------------------------------\nconst currentYear = new Date().getFullYear();\nconst randomNum = Math.floor(10000 + Math.random() * 90000);\nconst ticketId = `TCK-${currentYear}-${randomNum}`;\n\n// ------------------------------\n// Get Data From Previous Node\n// ------------------------------\nconst intent = $input.item.json.intent || 'unknown';\nconst details = $input.item.json.details || {};\nconst detailsDescription = details.description || \"\";\n\n// ------------------------------\n// User Static Info\n// ------------------------------\nconst userName = 'ريما الحمد';\nconst nationalId = '1098765432';\nconst mobile = '+966500000000';\n\n// ------------------------------\n// Detect Language (Simple & Effective)\n// ------------------------------\nfunction detectLanguage(text) {\n  if (!text) return \"ar\"; // default Arabic\n\n  const arabic = /[\\u0600-\\u06FF]/;\n  const urdu = /[ء-ی]/;               // Urdu Arabic script\n  const tagalogWords = [\"mahal\", \"salamat\", \"kumusta\", \"ito\", \"ako\"];\n  const english = /[a-zA-Z]/;\n\n  if (arabic.test(text)) return \"ar\";\n  if (urdu.test(text)) return \"ur\";\n  if (tagalogWords.some(w => text.toLowerCase().includes(w))) return \"tl\";\n  if (english.test(text)) return \"en\";\n\n  return \"ar\";\n}\n\nconst lang = detectLanguage(detailsDescription);\n\n// ------------------------------\n// Service Name Logic\n// ------------------------------\nlet serviceName;\nif (detailsDescription) {\n  serviceName = detailsDescription;\n} else {\n  const map = {\n    passport_renewal: \"تجديد جواز السفر\",\n    id_renewal: \"تجديد الهوية الوطنية\",\n    license_renewal: \"تجديد رخصة القيادة\",\n    status_inquiry: \"استفسار عن حالة الطلب\",\n    check_status: \"استفسار عن حالة الطلب\",\n    appointment_booking: \"حجز موعد\",\n    book_appointment: \"حجز موعد\",\n    create_request: \"إنشاء طلب جديد\",\n    update_request: \"تحديث طلب\",\n    cancel_request: \"إلغاء طلب\",\n    lost_id_request: \"بلاغ فقدان هوية\",\n    general_service_request: \"طلب خدمة عامة\",\n  };\n\n  serviceName = map[intent] || \"خدمة عامة\";\n}\n\n// ------------------------------\n// Estimated Time Logic\n// ------------------------------\nlet estimatedTime = {\n  create_request: \"24 hours\",\n  update_request: \"12 hours\",\n  check_status: \"instant\",\n  status_inquiry: \"instant\",\n  cancel_request: \"10 minutes\",\n  book_appointment: \"immediately\",\n  appointment_booking: \"immediately\",\n  lost_id_request: \"24 hours\",\n  general_service_request: \"24 hours\",\n  passport_renewal: \"5-7 أيام عمل\",\n  id_renewal: \"3-5 أيام عمل\",\n  license_renewal: \"2-3 أيام عمل\",\n}[intent] || \"24 hours\";\n\n// ------------------------------\n// Multilingual Reply Generator\n// ------------------------------\nfunction generateReply(lang) {\n  switch (lang) {\n    case \"en\":\n      return `Your request has been prepared, Reema 🌿. Your ticket number is ${ticketId}. Let me know if you'd like more details.`;\n    case \"ur\":\n      return `آپ کی درخواست تیار کر دی گئی ہے، ریما 🌿۔ آپ کا ٹکٹ نمبر ${ticketId} ہے۔ اگر آپ مزید تفصیلات چاہیں تو مجھے بتائیں۔`;\n    case \"tl\":\n      return `Handa na ang iyong request, Reema 🌿. Ito ang iyong ticket number: ${ticketId}. Sabihin mo lang kung gusto mo pa ng detalye.`;\n    default: // Arabic\n      return `تم تجهيز طلبك يا ريما 🌿 ورقم التذكرة هو ${ticketId}. أقدر أشرح لك تفاصيل أكثر إذا حبيتي.`;\n  }\n}\n\nconst reply = generateReply(lang);\n\n// ------------------------------\n// Build Final Ticket Object\n// ------------------------------\nconst ticket = {\n  ticket_id: ticketId,\n  status: \"processing\",\n  service_name: serviceName,\n  estimated_time: estimatedTime,\n  user: {\n    name: userName,\n    national_id: nationalId,\n    mobile: mobile\n  },\n  intent: intent,\n  details: details,\n  submitted_at: new Date().toISOString()\n};\n\n// ------------------------------\n// Return Final JSON\n// ------------------------------\nreturn {\n  json: {\n    success: true,\n    ticket: ticket,\n    reply: reply,\n    language_detected: lang\n  }\n};\n"
+      },
+      "id": "5fb41adf-bc50-4ca4-a804-914bde256753",
+      "name": "Generate Ticket & Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "1786a05b-c73a-4903-8b40-6c90fb2086cd",
+      "name": "Return JSON Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        896,
+        0
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Request Webhook": {
+      "main": [
+        [
+          {
+            "node": "Workflow Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Configuration": {
+      "main": [
+        [
+          {
+            "node": "Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          {
+            "node": "Generate Ticket & Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Ticket & Response": {
+      "main": [
+        [
+          {
+            "node": "Return JSON Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "29ce0bbd-666b-4d08-b510-b7845a2623f8",
+  "meta": {
+    "instanceId": "c4641c13926b75e130bcc3939984dea6f1d2312a9d791659c371785e42c34290"
+  },
+  "id": "WQO3urJgqIx7WfPA",
+  "tags": []
+}

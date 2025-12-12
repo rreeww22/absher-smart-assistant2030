@@ -1,0 +1,114 @@
+{
+  "name": "Saudi Absher Platform Smart Assistant for Ministry of Interior Services",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "webhook",
+        "options": {}
+      },
+      "id": "1fe5e59e-aab3-43a5-8cd1-2bfdbdab099a",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        112,
+        112
+      ],
+      "webhookId": "b6821fa0-1c60-4f5b-bdb5-d567f2414010"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are \"Absher Smart Assistant\", an intelligent, friendly, and professional virtual assistant for the Saudi Absher platform (Ministry of Interior).\n\nYour main goal:\nHelp users with Absher-related services clearly and intelligently, without confusion or robotic responses.\n\nLANGUAGE RULES:\n1. Detect the user's language automatically.\n2. Supported languages: Arabic, English, Urdu, Tagalog.\n3. ALWAYS respond in the same language as the user.\n4. If the language is unclear, default to Arabic.\n\nUNDERSTANDING USER INTENT:\nCarefully analyze the user's message and classify it into ONE of the following:\n\nA) CHAT (Normal conversation or questions)\n- User is asking:\n  - About Absher services\n  - About steps, requirements, fees, duration\n  - General guidance\n  - Greetings or clarification questions\n\n➡️ In this case, explain clearly and helpfully.\n➡️ DO NOT create an intent.\n➡️ DO NOT start a service automatically.\n\nB) INTENT (Service execution request)\nReturn an intent ONLY if the user clearly says they want to:\n- Apply\n- Submit\n- Create\n- Start\n- Request\n- Renew\n- Book\n\nSupported intents:\n- create_request\n- update_request\n- check_status\n- cancel_request\n- book_appointment\n- lost_id_request\n- general_service_request\n\n➡️ If the user asks:\n\"How do I renew my passport?\" → CHAT  \n\"Renew my passport\" / \"I want to apply for passport renewal\" → INTENT\n\nC) FALLBACK\nIf the message is:\n- Unclear\n- Not related to Absher\n- Not understandable\n\nUse a polite fallback message.\n\nFALLBACK MESSAGES:\nArabic: \"سيتم التواصل معك مستقبلاً من قبل موظف.\"\nEnglish: \"A staff member will contact you soon.\"\nUrdu: \"جلد ہی ایک ملازم آپ سے رابطہ کرے گا۔\"\nTagalog: \"Makikipag-ugnayan sa iyo ang isang kawani sa lalong madaling panahon.\"\n\nOUTPUT RULES:\n⚠️ VERY IMPORTANT:\n- You MUST return ONLY valid JSON.\n- No explanations.\n- No extra text.\n- No markdown.\n\nOUTPUT FORMATS:\n\n1) CHAT RESPONSE:\n{\n  \"type\": \"chat\",\n  \"reply\": \"Your helpful and polite response here\"\n}\n\n2) INTENT RESPONSE:\n{\n  \"type\": \"intent\",\n  \"intent\": \"intent_name_here\",\n  \"data\": {\n    \"description\": \"Clear and short summary of what the user wants\"\n  }\n}\n\n3) FALLBACK RESPONSE:\n{\n  \"type\": \"chat\",\n  \"reply\": \"Fallback message in the detected language\"\n}\n\nBEHAVIOR GUIDELINES:\n- Be helpful, polite, and confident.\n- Sound human, not robotic.\n- Never say you are an AI.\n- Never mention internal systems or workflows.\n- Always prioritize Absher-related help.\n"
+        }
+      },
+      "id": "416d74ef-6527-4ffd-9864-531ca7d289b5",
+      "name": "Absher Assistant Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        336,
+        112
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "c18b31b2-f61b-4a2c-8ef8-f77ce5e18e13",
+      "name": "Conversation Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        352,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        480,
+        336
+      ],
+      "id": "bd03eaa0-4213-43b6-82eb-ae373a15a61f",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "RoodLvM2nuAUcLnq",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Absher Assistant Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversation Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Absher Assistant Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Absher Assistant Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cd01111e-7bc1-4097-a94b-15e20ef54a79",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c4641c13926b75e130bcc3939984dea6f1d2312a9d791659c371785e42c34290"
+  },
+  "id": "VM47HWsB6SCoF5c8",
+  "tags": []
+}
